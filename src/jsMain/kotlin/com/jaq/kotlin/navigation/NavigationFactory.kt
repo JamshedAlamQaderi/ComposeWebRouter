@@ -11,3 +11,5 @@ object NavigationFactory {
         return navigator
     }
 }
+
+val navigator = NavigationFactory.getNavigator()

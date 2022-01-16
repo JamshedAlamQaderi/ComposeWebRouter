@@ -13,7 +13,7 @@ class RouterScope(path: String) : Route {
         childRouters.add(routerScope)
     }
 
-    fun route(path: String, view: @Composable () -> Unit) {
+    fun routeView(path: String, view: @Composable () -> Unit) {
         childRoutes.add(RouteModel(path, view))
     }
 
