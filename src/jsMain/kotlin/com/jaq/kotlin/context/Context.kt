@@ -4,7 +4,7 @@ import com.jaq.kotlin.param.BaseParam
 import com.jaq.kotlin.param.Param
 
 interface Context {
-    fun navigate(path: String, param: BaseParam?)
+    fun navigate(path: String, param: BaseParam? = null)
     fun back()
     fun forward()
     fun queryParams(): Param
