@@ -1,11 +1,9 @@
 package com.jaq.kotlin.param
 
-import kotlinx.browser.window
-import org.w3c.dom.url.URL
 import org.w3c.dom.url.URLSearchParams
 
 class QueryParam : BaseParam {
-    override val params: ArrayList<Pair<String, String>> =  arrayListOf()
+    override val params: ArrayList<Pair<String, String>> = arrayListOf()
 
     override fun put(key: String, value: String) {
         params.add(Pair(key, value))
@@ -31,12 +29,11 @@ class QueryParam : BaseParam {
     }
 
     override fun build(path: String): String {
-        val fullUrl = window.location.host + path
-        val _url = URL(fullUrl)
+        val urlSearchParams = URLSearchParams()
         params.forEach {
-            _url.searchParams.append(it.first, it.second)
+            urlSearchParams.append(it.first, it.second)
         }
-        return _url.toString()
+        return "$path?$urlSearchParams"
     }
 
     override fun cleanAll() {

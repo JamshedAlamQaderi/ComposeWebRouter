@@ -1,8 +1,10 @@
 package com.jaq.kotlin
 
 import com.jaq.kotlin.param.QueryParam
+import com.jaq.kotlin.param.keys
 import kotlinx.browser.window
 import org.w3c.dom.url.URL
+import org.w3c.dom.url.URLSearchParams
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -14,7 +16,7 @@ class ParamTest {
         queryParam.put("name", "Jamshed Alam")
         val path = "/api/search_user/"
         val url = queryParam.build(path)
-        assertEquals(url, "${window.location.host}$path?name=Jamshed+Alam")
+        assertEquals(url, "$path?name=Jamshed+Alam")
     }
 
     @Test
