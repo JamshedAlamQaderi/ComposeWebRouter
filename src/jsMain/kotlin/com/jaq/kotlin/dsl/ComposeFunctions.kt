@@ -26,12 +26,12 @@ fun composeRouter(childRouter: RouterScope.() -> Unit) {
     })
 
     val pathParamParser = PathParamParser()
-    val routeModel = router.render(routerUrl.value, "", pathParamParser)
-    val routerViewScope = RouterViewScope(routeModel?.path ?: "", routeModel?.view)
     val routeContext = RouteContext(pathParamParser)
     routeContext.onNavigate {
         updateUi()
     }
+    val routeModel = router.render(routerUrl.value, "", pathParamParser)
+    val routerViewScope = RouterViewScope(routeModel?.path ?: "", routeModel?.view)
     routerViewScope.renderView(routeContext)
 }
 

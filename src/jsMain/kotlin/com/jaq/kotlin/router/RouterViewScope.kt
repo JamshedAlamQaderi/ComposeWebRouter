@@ -1,16 +1,17 @@
 package com.jaq.kotlin.router
 
 import androidx.compose.runtime.Composable
+import com.jaq.kotlin.context.Context
 import com.jaq.kotlin.context.RouteContext
 import com.jaq.kotlin.parser.Parser
 
-class RouterViewScope(path: String, view: @Composable() (RouterViewScope.(RouteContext) -> Unit)?) : Route {
+class RouterViewScope(path: String, view: @Composable() (RouterViewScope.(Context) -> Unit)?) : Route {
     private val _path = path
     private val _view = view
 
     @Composable
-    fun renderView(routeContext: RouteContext) {
-        _view?.let { it(routeContext) }
+    fun renderView(context: Context) {
+        _view?.let { it(context) }
     }
 
     override fun isRenderer() = true

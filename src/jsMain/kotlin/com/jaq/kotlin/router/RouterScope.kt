@@ -1,6 +1,7 @@
 package com.jaq.kotlin.router
 
 import androidx.compose.runtime.Composable
+import com.jaq.kotlin.context.Context
 import com.jaq.kotlin.context.RouteContext
 import com.jaq.kotlin.parser.Parser
 
@@ -16,7 +17,7 @@ class RouterScope(path: String) : Route {
 
     fun routeView(
         path: String,
-        view: @Composable() (RouterViewScope.(RouteContext) -> Unit)? = null
+        view: @Composable() (RouterViewScope.(Context) -> Unit)? = null
     ) {
         val routeViewScope = RouterViewScope(path, view)
         routes.add(routeViewScope)
@@ -26,7 +27,7 @@ class RouterScope(path: String) : Route {
 
     override fun <T> render(browserUrl: String, parentUrl: String, parser: Parser<T>): RouteModel? {
         val routerUrl = parentUrl + _path
-        return routes.map { it.render(browserUrl, routerUrl, parser) }.firstOrNull()
+        return routes.firstNotNullOfOrNull { it.render(browserUrl, routerUrl, parser) }
     }
 
 }

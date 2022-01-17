@@ -1,5 +1,6 @@
 package com.jaq.kotlin.parser
 
+import com.jaq.kotlin.decodeURI
 import com.jaq.kotlin.param.Param
 import com.jaq.kotlin.param.PathParam
 
@@ -16,7 +17,7 @@ class PathParamParser : Parser<Param> {
             if (pathIdx >= routePaths.size) return false
             val routeValue = routePaths[pathIdx]
             if (isPathVar(routeValue)) {
-                _paramData.put(routeValue.removePrefix("{").removeSuffix("}"), pathValue)
+                _paramData.put(routeValue.removePrefix("{").removeSuffix("}"), decodeURI(pathValue))
                 pathMatchList.add(true)
             } else if (pathValue == routeValue) {
                 pathMatchList.add(true)
@@ -24,7 +25,7 @@ class PathParamParser : Parser<Param> {
                 pathMatchList.add(false)
             }
         }
-        return pathMatchList.reduce { acc, b -> acc && b };
+        return pathMatchList.reduce { acc, b -> acc && b }
     }
 
     override fun data(): Param {

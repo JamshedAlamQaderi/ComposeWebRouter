@@ -11,7 +11,7 @@ class PathParam : BaseParam {
     }
 
     override fun get(key: String): String? {
-        return params.filter { it.first == key }.firstOrNull()?.second
+        return params.firstOrNull { it.first == key }?.second
     }
 
     override fun getAll(key: String): Array<String?> {
