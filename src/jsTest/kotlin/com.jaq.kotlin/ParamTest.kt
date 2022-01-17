@@ -18,7 +18,7 @@ class ParamTest {
     }
 
     @Test
-    fun `parseQueryParamFromUrlSearch`() {
+    fun parseQueryParamFromUrlSearch() {
         val queryUrl = URL(window.location.host + "/api").apply {
             searchParams.apply {
                 append("size", "l")
@@ -26,13 +26,15 @@ class ParamTest {
                 append("name", "Jamshed")
             }
         }
-        val queryParamParsed = QueryParam().parse(queryUrl.search.removePrefix("?")).build("/api")
+        val queryParamParsed = QueryParam()
+        queryParamParsed.parse(queryUrl.search.removePrefix("?"))
+        val parserParams = queryParamParsed.build("/api")
         val queryParamBuild = QueryParam().apply {
             put("size", "l")
             put("size", "m")
             put("name", "Jamshed")
         }.build("/api")
 
-        assertEquals(queryParamParsed, queryParamBuild)
+        assertEquals(parserParams, queryParamBuild)
     }
 }

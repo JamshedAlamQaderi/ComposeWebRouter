@@ -4,9 +4,8 @@ import kotlinx.browser.window
 import org.w3c.dom.url.URL
 import org.w3c.dom.url.URLSearchParams
 
-class QueryParam : Param {
-    override val params: ArrayList<Pair<String, String>>
-        get() = arrayListOf()
+class QueryParam : BaseParam {
+    override val params: ArrayList<Pair<String, String>> =  arrayListOf()
 
     override fun put(key: String, value: String) {
         params.add(Pair(key, value))
@@ -38,6 +37,10 @@ class QueryParam : Param {
             _url.searchParams.append(it.first, it.second)
         }
         return _url.toString()
+    }
+
+    override fun cleanAll() {
+        params.clear()
     }
 
 }

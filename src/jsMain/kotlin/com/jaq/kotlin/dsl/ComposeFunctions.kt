@@ -3,8 +3,12 @@ package com.jaq.kotlin.dsl
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.jaq.kotlin.context.RouteContext
 import com.jaq.kotlin.navigation.NavigationFactory
+import com.jaq.kotlin.parser.PathParamParser
+import com.jaq.kotlin.router.RouteModel
 import com.jaq.kotlin.router.RouterScope
+import com.jaq.kotlin.router.RouterViewScope
 import kotlinx.browser.window
 import org.jetbrains.compose.web.renderComposable
 
@@ -24,8 +28,11 @@ fun composeRouter(childRouter: RouterScope.() -> Unit) {
     NavigationFactory.getNavigator().onNavigate {
         updateUi()
     }
-    val routeModel = router.render(routerUrl.value, "")
-    routeModel?.view?.let { it() }
+    val pathParamParser = PathParamParser()
+    val routeModel = router.render(routerUrl.value, "", pathParamParser)
+    val routerViewScope = RouterViewScope(routeModel?.path ?: "", routeModel?.view)
+    val routeContext = RouteContext(pathParamParser)
+    routerViewScope.renderView(routeContext)
 }
 
 fun renderComposableWithRouter(
@@ -33,4 +40,10 @@ fun renderComposableWithRouter(
     router: RouterScope.() -> Unit
 ) = renderComposable(rootElementId) {
     composeRouter(router)
+}
+
+fun composeTestRouter(path: String, childRouter: RouterScope.() -> Unit): RouteModel? {
+    val router = RouterScope("").apply(childRouter)
+    val pathParamParser = PathParamParser()
+    return router.render(path, "", pathParamParser)
 }

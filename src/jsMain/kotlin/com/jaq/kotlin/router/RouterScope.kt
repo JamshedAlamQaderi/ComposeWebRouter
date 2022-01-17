@@ -1,42 +1,32 @@
 package com.jaq.kotlin.router
 
 import androidx.compose.runtime.Composable
+import com.jaq.kotlin.context.RouteContext
+import com.jaq.kotlin.parser.Parser
 
 class RouterScope(path: String) : Route {
-    private var _path: String = path
-    private val childRouters = arrayListOf<RouterScope>()
-    private val childRoutes = arrayListOf<RouteModel>()
+    private val _path = path
+    private val routes = arrayListOf<Route>()
 
     fun router(path: String, child: RouterScope.() -> Unit) {
         val routerScope = RouterScope(path)
         routerScope.child()
-        childRouters.add(routerScope)
+        routes.add(routerScope)
     }
 
-    fun routeView(path: String, view: @Composable () -> Unit) {
-        childRoutes.add(RouteModel(path, view))
+    fun routeView(
+        path: String,
+        view: @Composable() (RouterViewScope.(RouteContext) -> Unit)? = null
+    ) {
+        val routeViewScope = RouterViewScope(path, view)
+        routes.add(routeViewScope)
     }
 
-    override fun render(browserUrl: String, parentUrl: String): RouteModel? {
-        val routerUrl = (if (parentUrl == "") "/" else parentUrl) + _path
-        val childRouter = childRouters.map { it.render(browserUrl, routerUrl) }.firstOrNull()
-        if (childRouter !== null) {
-            return childRouter
-        }
-        if (routerUrl == browserUrl) {
-            val findChild = childRoutes.find {
-                var childEmptyRoute = parentUrl + it.path
-                childEmptyRoute = if (childEmptyRoute == "") "/" else childEmptyRoute
-                childEmptyRoute == routerUrl
-            }
-            return findChild
-        }
-        val routes = childRoutes.filter {
-            browserUrl.startsWith(this._path + it.path)
-        }
-        if (routes.isNotEmpty()) {
-            return routes.firstOrNull()
-        }
-        return null
+    override fun isRenderer() = false
+
+    override fun <T> render(browserUrl: String, parentUrl: String, parser: Parser<T>): RouteModel? {
+        val routerUrl = parentUrl + _path
+        return routes.map { it.render(browserUrl, routerUrl, parser) }.firstOrNull()
     }
+
 }
