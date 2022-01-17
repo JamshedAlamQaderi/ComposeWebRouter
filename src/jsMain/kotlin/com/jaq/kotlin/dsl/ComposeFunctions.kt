@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.jaq.kotlin.context.RouteContext
-import com.jaq.kotlin.navigation.NavigationFactory
 import com.jaq.kotlin.parser.PathParamParser
 import com.jaq.kotlin.router.RouteModel
 import com.jaq.kotlin.router.RouterScope
@@ -25,13 +24,14 @@ fun composeRouter(childRouter: RouterScope.() -> Unit) {
     window.addEventListener("popstate", {
         updateUi()
     })
-    NavigationFactory.getNavigator().onNavigate {
-        updateUi()
-    }
+
     val pathParamParser = PathParamParser()
     val routeModel = router.render(routerUrl.value, "", pathParamParser)
     val routerViewScope = RouterViewScope(routeModel?.path ?: "", routeModel?.view)
     val routeContext = RouteContext(pathParamParser)
+    routeContext.onNavigate {
+        updateUi()
+    }
     routerViewScope.renderView(routeContext)
 }
 
