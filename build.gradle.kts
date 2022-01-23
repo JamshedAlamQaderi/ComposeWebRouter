@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.jaq.kotlin"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     google()
@@ -20,8 +20,9 @@ kotlin {
     js(IR) {
         browser {
             testTask {
+                enabled = false
                 useKarma {
-//                    useChrome()
+                    useChromeHeadless()
                 }
             }
             commonWebpackConfig {
